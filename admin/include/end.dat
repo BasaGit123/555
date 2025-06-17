@@ -1,0 +1,70 @@
+ 
+
+ 
+
+<script>
+
+	// Get all the navigation links
+const navLinks = document.querySelectorAll('.nav-link');
+
+// Add the 'active' class to the currently active link
+navLinks.forEach(link => {
+  // Check if the link's href matches the current URL
+  if (link.href === window.location.href) {
+    link.classList.add('active');
+  } else {
+    // Remove the 'active' class from all other links
+    link.classList.remove('active');
+  }
+});
+	
+
+
+$(document).ready(function(){
+
+		$(".tel1").inputmask("+7 (999) 999-99-99");
+		$(".tel3").inputmask("+7 (9999) 99-99-99");
+		$(".wa").inputmask("79999999999");
+       
+});
+
+/**
+ * Adds a mask to input fields with the class "price" to separate thousands from units with a space.
+ */
+function addPriceMask() {
+  // Get all input fields with the class "price"
+  const priceInputs = document.querySelectorAll('.price');
+
+  // Loop through each input field
+  priceInputs.forEach((input) => {
+    // Add an event listener to the input field
+    input.addEventListener('input', (event) => {
+      // Get the current value of the input field
+      let value = event.target.value;
+
+      // Remove any non-numeric characters from the value
+      value = value.replace(/\D/g, '');
+
+      // Add a space every 3 digits from the right
+      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+
+      // Update the value of the input field with the formatted price
+      event.target.value = value;
+    });
+  });
+}
+
+// Call the addPriceMask function to apply the mask to all input fields with the class "price"
+addPriceMask();
+</script>
+
+
+
+<?php
+if($status == 'admin') echo'</div></div>'.$ADMIN_END_HTML;
+?>
+
+
+
+</body>
+</html><?php ob_end_flush();?>
