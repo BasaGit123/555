@@ -1,0 +1,367 @@
+<?php
+// Класс для страниц
+class Page
+{
+	public $id;
+	public $name;
+	public $h1;
+	public $robots;
+	public $baner;
+	public $title;
+	public $sitemap;
+	public $description;
+	public $show;
+	public $module;
+	public $time;
+	public $headhtml;
+	public $endhtml;
+	public $content;
+	public $template;
+	public $clear = false;
+	public $error = '<div style="border: 1px solid black; background-color: red; font: bold 16px Courier, sans-serif; text-align: center; color: white; padding: 10px;">Ошибка вывода модуля. Возможно, модуль был удален.</div>';
+	public $header;
+	public $slogan;
+	public $indexPage;
+
+
+
+	public function __construct($id, $Config = false)
+	{
+		if(self::exists($id)){
+			$array = explode('<||>', file_get_contents(DR.'/data/pages/cfg_'.$id.'.dat'));
+			$this->id = $id;
+			$this->name = $array[0];
+			$this->h1 = $array[1];
+			$this->robots = $array[2];
+			$this->baner = $array[3];
+			$this->title = $array[4];
+			$this->sitemap = $array[5];
+			$this->description = $array[6];
+			$this->show = $array[7];
+			$this->module = $array[8];
+			$this->time = $array[9];
+			// 5.1
+			$this->template = isset($array[10]) && $array[10] != ''?$array[10]:'def/template';
+			
+
+			// Глобальные настройки
+			if($Config){
+				$this->header = $Config->header;
+				$this->slogan = $Config->slogan;
+				$this->indexPage = $Config->indexPage;
+			}
+		}
+	}
+	
+	
+	public function content()
+	{
+		return self::contentDat($this->id);
+	}
+
+
+	public function isIndexPage()
+	{
+		return $this->id == $this->indexPage?true:false;
+	}
+	
+public function get_menu($teg = 'li')
+{
+    $host = $_SERVER['HTTP_HOST'];
+    $base_url = 'https://' . $host . '/';
+    
+    if (!file_exists(DR . '/data/bloks/links_gorizont.dat')) {
+        return;
+    }
+    
+    $link_data = file(DR . '/data/bloks/links_gorizont.dat');
+    $menu_items = [];
+    
+    // Собираем пункты меню (PHP 5.6+)
+    foreach ($link_data as $link) {
+        $link_cfg = explode("<||>", $link);
+        $menu_items[] = [
+            'type' => $link_cfg[0],
+            'page' => isset($link_cfg[1]) ? $link_cfg[1] : '',
+            'name' => isset($link_cfg[2]) ? $link_cfg[2] : '',
+            'level' => isset($link_cfg[3]) ? (int)$link_cfg[3] : 0,
+            'parent' => isset($link_cfg[4]) ? $link_cfg[4] : '0',
+            'order' => isset($link_cfg[5]) ? $link_cfg[5] : '0'
+        ];
+    }
+
+    // Группировка (PHP 5.6+)
+    $grouped_menu = [];
+    foreach ($menu_items as $item) {
+        if ($item['level'] == 0) {
+            $grouped_menu[$item['page']] = [
+                'item' => $item,
+                'children' => []
+            ];
+        }
+    }
+    foreach ($menu_items as $item) {
+        if ($item['level'] == 1 && isset($grouped_menu[$item['parent']])) {
+            $grouped_menu[$item['parent']]['children'][] = $item;
+        }
+    }
+
+    // Определяем текущую страницу (PHP 5.6+)
+$request_uri = $_SERVER['REQUEST_URI'];
+    $current_path = trim(preg_replace('#/+#', '/', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)), '/');
+    $is_home = empty($current_path) || $current_path === $this->indexPage;
+
+    // Вывод меню с микроразметкой
+    foreach ($grouped_menu as $menu_group) {
+        $item = $menu_group['item'];
+        $children = $menu_group['children'];
+        $has_children = !empty($children);
+        
+        // Определяем URL и активность
+        if ($item['type'] == "page") {
+            $page_id = trim($item['page'], '/');
+            $url = $base_url . ($page_id != $this->indexPage ? $page_id : '');
+            $is_active = $is_home ? ($page_id == $this->indexPage) : 
+                      ($current_path === $page_id || strpos($current_path, $page_id . '/') === 0);
+        } else {
+            $url = $item['page'];
+            $is_active = (strpos($url, $host) !== false || $url[0] == '/') ? 
+                        ($is_home ? empty(trim(parse_url($url, PHP_URL_PATH), '/')) : 
+                        ($current_path === trim(parse_url($url, PHP_URL_PATH), '/'))) : false;
+        }
+
+        // Вывод пункта (без самоссылки)
+        echo '<' . $teg . ' class="menu-item ' . ($has_children ? 'dropdown' : '') . ' level-' . $item['level'] . '" itemscope itemtype="http://www.schema.org/SiteNavigationElement">';
+        
+        if ($is_active) {
+            echo '<a href="' . $url . '" class="active"><span itemprop="name">' . $item['name'] . '</span></a>';
+        } else {
+            echo '<a href="' . $url . '" itemprop="url"><span itemprop="name">' . $item['name'] . '</span></a>';
+        }
+
+        // Подпункты
+        if ($has_children) {
+            echo '<ul class="submenu">';
+            foreach ($children as $child) {
+                if ($child['type'] == "page") {
+                    $child_page_id = trim($child['page'], '/');
+                    $child_url = $base_url . ($child_page_id != $this->indexPage ? $child_page_id : '');
+                    $child_active = $is_home ? ($child_page_id == $this->indexPage) : 
+                                  ($current_path === $child_page_id || strpos($current_path, $child_page_id . '/') === 0);
+                } else {
+                    $child_url = $child['page'];
+                    $child_active = (strpos($child_url, $host) !== false || $child_url[0] == '/') ? 
+                                   ($is_home ? empty(trim(parse_url($child_url, PHP_URL_PATH), '/')) : 
+                                   ($current_path === trim(parse_url($child_url, PHP_URL_PATH), '/'))) : false;
+                }
+                
+                echo '<li class="submenu-item level-' . $child['level'] . '">';
+                if ($child_active) {
+                    echo '<a href="#" class="active"><span itemprop="name">' . $child['name'] . '</span>';
+                } else {
+                    echo '<a href="' . $child_url . '" itemprop="url"><span itemprop="name">' . $child['name'] . '</span></a>';
+                }
+                echo '</li>';
+            }
+            echo '</ul>';
+        }
+        
+        echo '</' . $teg . '>';
+    }
+}
+	
+	public function get_column($lr, $template_blok = '#content#')
+	{
+		$blok_data = file(DR.'/data/bloks/'.$lr.'_bloks.dat');
+		$bnom = count($blok_data);
+		for($bi = 0; $bi < $bnom; ++$bi){
+			$blok_cfg = explode('<||>',$blok_data[$bi]);
+			$content = '';
+			if($blok_cfg[1] == 'links'){//если блок имеет тип Ссылки
+				if(file_exists(DR.'/data/bloks/links_'.$blok_cfg[0].'.dat')){
+					$link_data = file(DR.'/data/bloks/links_'.$blok_cfg[0].'.dat');
+					$nom_0067 = count($link_data);
+					for($q = 0; $q < $nom_0067; ++$q){
+						$link_cfg = explode("<||>",$link_data[$q]);
+						if($link_cfg[0] == 'page'){//если ссылка имеет тип На страницу движка
+							$tmp_url = $link_cfg[1]!=$this->indexPage?$link_cfg[1]:'';
+							$content.= '<div class="link"><a href="/'.$tmp_url.'">'.$link_cfg[2].'</a></div>';
+						}elseif($link_cfg[0] == 'http'){//если ссылка имеет тип Простая http ссылка
+							$content.= '<div class="link"><a href="'.$link_cfg[1].'">'.$link_cfg[2].'</a></div>';
+						}
+					}
+				}else{
+					$content = $this->error;
+				}
+			}elseif($blok_cfg[1] == 'html'){//если блок имеет тип HTML 
+				if(file_exists(DR.'/data/bloks/html_'.$blok_cfg[0].'.dat')){
+					$content = file_get_contents(DR.'/data/bloks/html_'.$blok_cfg[0].'.dat');
+				}else{
+					$content = $this->error;
+				}
+			}elseif($blok_cfg[1] == 'module'){//если блок имеет тип Модуль
+				if(file_exists(DR.'/modules/'.$blok_cfg[0].'/integration_blok.php')){
+					$content = include(DR.'/modules/'.$blok_cfg[0].'/integration_blok.php');
+				}else{$content = $this->error;}
+			}else{$content = $this->error;}
+			//Выводим по шаблону
+			$temp = str_replace('#name#',$blok_cfg[2],$template_blok);
+			echo str_replace('#content#',$content,$temp);
+		}
+	}
+	
+	public function clear(){$this->clear = true;}
+	
+	public function get_content()
+	{
+		global $Config, $Page, $Snippet;
+		if (!$this->clear) require(DR.'/data/pages/page_'.$this->id.'.dat'); 
+		echo $this->content;
+	}
+	
+	public function get_title(){echo $this->title;}
+	
+	public function get_description(){echo $this->description;}
+	
+	public function get_sitemap(){echo $this->sitemap;}
+	
+	public function get_name(){echo $this->name;}
+
+	public function get_h1(){echo $this->h1;}
+
+	public function get_robots(){echo $this->robots;}
+
+	public function get_baner(){echo $this->baner;}
+	
+	public function get_headhtml(){echo $this->headhtml;}
+	
+	public function get_endhtml(){echo $this->endhtml;}
+	
+	public function get_header(){echo $this->header;}
+	
+	public function get_slogan(){echo $this->slogan;}
+	
+	
+	
+	
+	public static function contentDat($page)
+	{
+		return file_get_contents(DR.'/data/pages/page_'.$page.'.dat');
+	}
+	
+	
+	public static function exists($page)
+	{
+		if(file_exists(DR.'/data/pages/cfg_'.$page.'.dat') && file_exists(DR.'/data/pages/page_'.$page.'.dat')){
+			$rezult = true;
+		}else{
+			$rezult = false;
+		}
+		return $rezult;
+	}
+	
+	
+	public static function delete($page)
+	{
+		if(self::exists($page)){
+			$rezult = true;
+			
+			unlink(DR.'/data/pages/cfg_'.$page.'.dat');//Удалили конфигурационный файл
+			unlink(DR.'/data/pages/page_'.$page.'.dat');//Удалили содержимое страницы
+			
+			//Удаляем страницу из списка
+			$listPages = System::listPages(); // Получили список страниц ввиде массива
+			if(($key = array_search($page, $listPages, true)) !== false){
+				unset($listPages[$key]); // Удалили найденый элемент массива
+			}
+			$listPages = array_values($listPages); // Переиндексировали числовые индексы 
+			filefputs(DR.'/data/pages/list.dat', json_encode($listPages, JSON_FLAGS), 'w+'); // Записали
+			
+		}else{
+			$rezult = false;
+		}
+		return $rezult;
+	}
+	
+	
+	public static function add($id, $name, $h1, $robots, $baner, $title, $sitemap, $description, $show, $module, $template, $html){
+		if($id == '') $id = time();
+		if($module == '') $module = 'no/module';
+		
+		if(System::validPath($id)) {
+			$return = false;
+			$inset = htmlspecialchars(specfilter($name)).'<||>'.
+					htmlspecialchars(specfilter($h1)).'<||>'.
+					htmlspecialchars(specfilter($robots)).'<||>'.
+					htmlspecialchars(specfilter($baner)).'<||>'.
+					htmlspecialchars(specfilter($title)).'<||>'.
+					htmlspecialchars(specfilter($sitemap)).'<||>'.
+					htmlspecialchars(specfilter($description)).'<||>'.
+					htmlspecialchars(specfilter($show)).'<||>'.
+					htmlspecialchars(specfilter($module)).'<||>'.
+					time().'<||>'.
+					htmlspecialchars(specfilter($template));
+			
+			$pageExists = self::exists($id);
+			
+			if(!$pageExists && $sitemap != 1) {
+				// Добавляем в список только если страница новая и sitemap не равен 1
+				$listPages = System::listPages();
+				array_push($listPages, $id);
+				filefputs(DR.'/data/pages/list.dat', json_encode($listPages, JSON_FLAGS), 'w+');
+			}
+			elseif($pageExists) {
+				// Для существующей страницы обновляем список при необходимости
+				$listPages = System::listPages();
+				$key = array_search($id, $listPages, true);
+				
+				if($sitemap == 1 && $key !== false) {
+					// Удаляем из списка если sitemap стал равен 1
+					unset($listPages[$key]);
+					filefputs(DR.'/data/pages/list.dat', json_encode(array_values($listPages), JSON_FLAGS), 'w+');
+				}
+				elseif($sitemap != 1 && $key === false) {
+					// Добавляем в список если sitemap не равен 1 и страницы нет в списке
+					array_push($listPages, $id);
+					filefputs(DR.'/data/pages/list.dat', json_encode($listPages, JSON_FLAGS), 'w+');
+				}
+			}
+			
+			filefputs(DR.'/data/pages/cfg_'.$id.'.dat', $inset, 'w+');
+			filefputs(DR.'/data/pages/page_'.$id.'.dat', $html, 'w+');
+		} else {
+			$return = true;
+		}
+		return $return;
+	}
+	
+	
+	public static function rename($id, $nid){
+		$return = false;
+		if($id !== $nid && self::exists($id) && !self::exists($nid) && System::validPath($nid)) {
+			$return = true;
+			
+			// Получаем текущие настройки страницы
+			$pageData = explode('<||>', file_get_contents(DR.'/data/pages/cfg_'.$id.'.dat'));
+			$sitemap = isset($pageData[5]) ? $pageData[5] : 0;
+			
+			rename(DR.'/data/pages/cfg_'.$id.'.dat', DR.'/data/pages/cfg_'.$nid.'.dat');
+			rename(DR.'/data/pages/page_'.$id.'.dat', DR.'/data/pages/page_'.$nid.'.dat');
+			
+			// Обновляем список только если sitemap не равен 1
+			if($sitemap != 1) {
+				$listPages = System::listPages();
+				if(($key = array_search($id, $listPages, true)) !== false) {
+					$listPages[$key] = $nid;
+					filefputs(DR.'/data/pages/list.dat', json_encode($listPages, JSON_FLAGS), 'w+');
+				}
+			}
+		}
+		return $return;
+	}
+	
+	
+	
+}
+
+?>

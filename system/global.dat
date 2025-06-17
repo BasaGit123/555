@@ -1,0 +1,198 @@
+<?php
+// Минимальная версия тестов PHP: 5.2.17
+// Максимальная версия тестов PHP: 8.3.0 (Apache: 2.4)
+// Версия скрипта:
+$version = '5.1.44 PRO';
+
+
+
+
+// Выключение протоколирования ошибок для включения 0 заменить на "E_ALL ^ E_NOTICE" без кавычек
+error_reporting(0);
+
+
+
+
+// Загрузка PHP функций 
+require 'function.dat';
+
+
+
+
+// Подготовленные константы
+define('REQUEST_URI', htmlspecialchars($_SERVER['REQUEST_URI']));
+define('REFERER',     htmlspecialchars(isset($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:''));
+define('HOST',        htmlspecialchars($_SERVER['HTTP_HOST']));
+define('UA',          htmlspecialchars(isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:''));
+define('IP',          $_SERVER['REMOTE_ADDR']);
+define('DR',          dirname7(__FILE__, 2)); // Аналог dirname в php7+
+define('SELF',        htmlspecialchars($_SERVER['PHP_SELF']));
+define('SERVER',      $_SERVER['SERVER_NAME']);
+define('PROTOCOL',    $_SERVER['SERVER_PROTOCOL']);
+define('HTTPS',       isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' || $_SERVER['SERVER_PORT'] == 443 ? true : false);
+define('VERSION',     $version);
+define('JSON_FLAGS',  defined('JSON_UNESCAPED_UNICODE')?JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT:0);// Флаги json данных для старых версий php
+
+
+
+
+// Автозагрузка классов
+function autoloader($class) {
+	if(file_exists(DR.'/system/classes/' . $class . '.dat')){
+		require DR.'/system/classes/' . $class . '.dat';
+	}
+}
+spl_autoload_register('autoloader');
+
+
+
+// Получение сохраненых настроек системы
+$Config = System::getConfig();
+
+
+
+// Правило отображения PHP ошибок
+if($Config->errorReporting){
+	error_reporting(E_ALL ^ E_NOTICE);
+}
+
+
+
+// Правило переадресации с http на https
+if(!HTTPS && $Config->httpsRule){
+	header( 'Location: https://'.SERVER.REQUEST_URI, true, 301 );
+	exit;
+}
+
+
+
+// Правило переадресации с www на без www
+if($Config->wwwRule){
+	$arrDomain = explode('.', SERVER);
+	if($arrDomain[0] == 'www'){
+		array_shift($arrDomain);
+		header('Location: '.$Config->protocol.'://'.implode('.', $arrDomain).REQUEST_URI, true, 301);
+		exit;
+	}
+}
+
+
+
+// Включили буфер вывода
+ob_start($Config->gzip?'ob_gzhandler':null); 
+
+
+
+// Экранируем при необходимости строки в $_GET, $_POST, $_COOKIE, $_FILES
+// Магические кавычки нужны для работы на php5.2
+if(function_exists('get_magic_quotes_gpc')){
+	if(get_magic_quotes_gpc()){
+		function fix_magic_quotes_gpc($arr) {
+			foreach($arr as $k=>$v){
+				if (is_array($v)){
+					fix_magic_quotes_gpc($v);
+				}else{
+					$arr[$k] = stripslashes($v);
+				}
+			}
+			return $arr;
+		}
+		if(!empty($_POST)) $_POST = fix_magic_quotes_gpc($_POST);
+		if(!empty($_GET)) $_GET = fix_magic_quotes_gpc($_GET);
+		if(!empty($_COOKIE)) $_COOKIE = fix_magic_quotes_gpc($_COOKIE);
+		if(!empty($_FILES)){
+			foreach ($_FILES as $k => $v){
+				$_FILES[$k]['name'] = stripslashes((string) $v['name']);
+			} 
+		}
+	}
+}else{
+	function get_magic_quotes_gpc() {return null;} // vsc error off
+}
+
+
+
+// Определили временную зону
+if($Config->timeZone != 'default'){
+	date_default_timezone_set($Config->timeZone);
+}
+
+
+
+// act get/post параметр
+if(isset($_GET['act'])){$act = $_GET['act'];}elseif(isset($_POST['act'])){$act = $_POST['act'];}else{$act='index';}
+
+
+
+// Переменные для расширения админки
+$ADMIN_HEAD_HTML = "\n".'<!-- Подключаемые расширения -->'."\n";
+$ADMIN_END_HTML = "\n".'<!-- Подключаемые расширения -->'."\n";
+
+
+
+// Авторизация администратора
+if(isset($_COOKIE['password'])){
+	$password = $_COOKIE['password'];
+	
+	if(cipherPass($password, $Config->salt) == $Config->adminPassword){
+		$status = 'admin';
+		setcookie('password', $password, time() + $Config->timeAuth, '/');
+	}else{
+		$status = 'gost';
+	}
+}else{
+	$status = 'gost';
+}
+
+
+
+//  Если забанен IP пользователя
+if($Config->ipBanRule && $status != 'admin'){
+	if(in_array(IP, $Config->ipBan)){
+		header('Content-type: text/html; charset=utf-8'); 
+		require DR.'/pages/ipban.html'; ob_end_flush(); exit();
+	}
+}
+// Авторизация пользователя
+if(isset($_COOKIE['user_login']) && isset($_COOKIE['user_password'])){
+	$User = new User($_COOKIE['user_login'], $_COOKIE['user_password']);
+	if($User->authorized){
+		// Продлили авторизацию 
+		setcookie('user_login',$_COOKIE['user_login'],time()+32000000,'/');
+		setcookie('user_password',$_COOKIE['user_password'],time()+32000000,'/');
+		
+		// Если забанен пользователь
+		if ($User->timeBan > time() && $status != 'admin'){
+			header('Content-type: text/html; charset=utf-8'); 
+			require DR.'/pages/ban.html'; ob_end_flush(); exit();
+		}
+
+		// Если забанен IP пользователя
+		if(in_array(IP, $Config->ipBan) && $status != 'admin'){
+			header('Content-type: text/html; charset=utf-8'); 
+			require DR.'/pages/ipban.html'; ob_end_flush(); exit();
+		}
+
+		if($Config->userEmailChecked && !$User->emailChecked){
+			// Сбросили авторизацию если емайл не подтвержден
+			$User->authorized = false;
+		}
+	}
+}else{
+	$User = new User();// определили не авторизованного пользователя
+}
+
+
+
+// Получение списка запускаемых модулей
+$RunModules = System::listRunModules();
+foreach($RunModules->system as $value){
+	if(Module::isIntegrationSystem($value)){
+		require Module::pathRun($value, 'integration_system');
+	}
+}
+
+
+
+// Закрывающий тег обязателен до версии php 5.3
+?>
