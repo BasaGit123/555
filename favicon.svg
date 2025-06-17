@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="190" height="127" viewBox="0 0 190 127">
+
+<linearGradient id="Gradient1" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#7711aa"/>
+<stop offset="100%" stop-color="#7711aa"/>
+</linearGradient>
+
+<rect class="svgt1" fill="#7711aa" 
+    width="40" height="120"
+    x="50" 
+    y="0" 
+    rx="20" 
+    ry="20" 
+    transform="translate(-20) rotate(-25 90 0)" />
+
+<rect class="svgt2" fill="#9933cc" 
+    width="40" height="120"
+    x="50" 
+    y="0" 
+    rx="20" 
+    ry="20" 
+    transform="translate(0) rotate(25 50 0)" />
+
+<rect class="svgt3" fill="#7711aa" 
+    width="40" height="120"
+    x="120" 
+    y="0" 
+    rx="20" 
+    ry="20" 
+    transform="translate(-21) rotate(-25 160 0)" />
+
+<rect class="svgt4" fill="#9933cc" 
+    width="40" height="120"
+    x="120" 
+    y="0" 
+    rx="20" 
+    ry="20" 
+    transform="translate(-1) rotate(25 120 0)" />
+
+</svg>
