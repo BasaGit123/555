@@ -1,0 +1,15 @@
+{
+    "system": [
+        "contact",
+        "customize",
+        "indexnow",
+        "news",
+        "sitemap"
+    ],
+    "pages": [
+        "contact",
+        "cookies",
+        "customize"
+    ],
+    "end": []
+}

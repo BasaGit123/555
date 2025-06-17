@@ -1,0 +1,20 @@
+{
+    "login": "weqqer",
+    "password": "bfa6c27ce62542003af55cefb2fd264c",
+    "salt": "exNIczEYRDsZletWqusuJ7HD2ckrVPRJNMekSN2R3MonykHUpytnRSJR3zrBV0SyMUBa62Mh1oWUf4xQAccLIG2ib6tFpk5yns4yqvUGA1IJCoXFhh8bMT3K6UlM7UF23CycEYWezur2c6aM9P57sMGVrcJrVVQj9b0tb82AMZ5nMSkJulw3xpccsradoWJZHkkaBew9DoOXRXlijhGdGBYi3itm8ebqImcshntO28i8D8rua1fY0uvAa4cSLjq",
+    "email": "admin@example.com",
+    "emailChecked": 1,
+    "emailChecksum": "yVL4YOyoq0hKZeNF9KS7ZAqVryCNecnALtef2KQzdce8Yet7WFaJrYuOtzf4EQyAaccLzKu1Dai4zwD3u7Sk9Drez4af4tNWMFzU",
+    "newPasswordChecksum": "sg7YtTXRrM3eh2Yn3LYjSVBXfeRDfnOFKUeiAg5e4gbCv0tRoiA6S0q8TKFUO3xRQwpgkXvKJ116eKWikP02bk5SFfF2MWc62a2w",
+    "about": "",
+    "ip": "192.168.1.181",
+    "ua": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/137.0.0.0 Safari\/537.36",
+    "numPost": 0,
+    "causeBan": "",
+    "timeBan": 0,
+    "timeActive": 1749653817,
+    "timeRegistration": 1749653817,
+    "data": [],
+    "preferences": 0,
+    "authorized": false
+}

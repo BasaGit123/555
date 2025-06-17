@@ -1,0 +1,20 @@
+{
+    "login": "dfdsfd",
+    "password": "a1af6e481a4988d247a24b470b4f78c0",
+    "salt": "ltzCmpbYH5Avf0oDpYWCE9TvI9yS140V9vsyXf8d0EXGPpdzZyVqsqXIx9SL4aZyUjEuQzUim4TZi5T7QDPwsIfiTibz7FfnS7TiL79UgLp6eSg5QiBmzJ00iU2VYcbFPEqSQSMQMLx15BC2rVBzUzz1mEMiHkt84TiuvIJEEMjC8owWGZvFfteUAsuQcaOwPKLDAPeleSEHm9A0pK9OyVVLVj6ajED5HLL9BwnbP4etp3VTXefB0faoSjNHSGC",
+    "email": "ss@sdf.ru",
+    "emailChecked": 1,
+    "emailChecksum": "Mcp2fzutS3IeBlwVMVW7XSeydapUwYSBUzO1SuxqPjLdctJNninASd2KzrUj6wuAWmgeBPetqjOU67agxMJe8KfaChEjDOtPlySG",
+    "newPasswordChecksum": "ik3hPrhZ2O9CdhWGE0hgM3ZVwGcAEYHM3dtOQGy6YCI9lSbM1ce6ql5w4b3brnCDrgq14lmlHT5ujhWjveCOuqyYE8DEfYZyeIgu",
+    "about": "",
+    "ip": "192.168.1.181",
+    "ua": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/137.0.0.0 Safari\/537.36",
+    "numPost": 0,
+    "causeBan": "",
+    "timeBan": 0,
+    "timeActive": 1749653484,
+    "timeRegistration": 1749653484,
+    "data": [],
+    "preferences": 0,
+    "authorized": false
+}

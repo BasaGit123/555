@@ -1,0 +1,42 @@
+<?php
+if (!$Page->isIndexPage()) {
+    $uri = strtok(trim($_SERVER['REQUEST_URI']), '?');
+    $parts = array_filter(explode('/', $uri));
+
+    echo '<div class="breadcrumbs">';
+    echo '<a href="/">Главная</a>';
+
+    $current_path = '';
+    foreach ($parts as $i => $part) {
+        $current_path .= '/' . $part;
+        $page_id = str_replace('/', '__', trim($current_path, '/'));
+        $is_pagination = is_numeric($part);
+        echo ' <span class="sep">/</span> ';
+        if ($is_pagination) {
+            echo '<span>' . htmlspecialchars($part) . '</span>';
+            continue;
+        }
+        if ($page_id === str_replace('/', '__', trim($uri, '/'))) {
+            echo '<a href="' . $current_path . '">' . $Page->get_name() . '</a>';
+        } 
+        elseif (Page::exists($page_id)) {
+            $p = new Page($page_id);
+            echo '<a href="' . htmlspecialchars($current_path) . '">' . htmlspecialchars($p->name) . '</a>';
+        }
+        else {
+            $parent_id = str_replace('/', '__', trim(str_replace('/'.$part, '', $current_path), '/'));
+            if (Page::exists($parent_id)) {
+                $parent_page = new Page($parent_id);
+                if ($parent_page->module != 'no/module') {
+                    echo '<a href="' . htmlspecialchars($current_path) . '">' . 
+                         htmlspecialchars(ucfirst(str_replace(['_', '-'], ' ', $part))) . '</a>';
+                    continue;
+                }
+            }
+            echo '<a href="' . htmlspecialchars($current_path) . '">' . 
+                 htmlspecialchars(ucfirst(str_replace(['_', '-'], ' ', $part))) . '</a>';
+        }
+    }
+    echo '</div>';
+}
+?>

@@ -1,0 +1,20 @@
+{
+    "login": "Vasa",
+    "password": "ac541fb508cdf39aae9e5483c529b534",
+    "salt": "EpUlL2RuxV9JqAzJcOSRd9RCnQecexThXjEJvt8OP3oRkq9rOkhPE4zVrA0dMehvsUGyXHZPMuJqeY26FWcGotKhgIAUW71cVzEahrPwFYyNYiW86BtbXxVzyOeUpx2GfnF9Qj5B3Z2IFJjd6jnv7bQSbAxBcIIdJFyOfohFJfiRE9IYbpPAXuwCYVuNMF88OdgbRCvKQ9G56A4KC782St3UCrAnAI7NZqxK9SNhZScIZmVJgTBI1bIGNfWlwA3",
+    "email": "ss@sdf.ru",
+    "emailChecked": 0,
+    "emailChecksum": "LUJGEHbmueGMQqoxel1qHaGTFApMjyXKK3M0GXwOS7oE0cRUXjlx16Cr4vgRrtaLgP2skLJ8wt0SaKwyHRpcNXCf0i9TN25UKPNd",
+    "newPasswordChecksum": "IB34t5EDM0Jt7OPQcdtfUEZfBGmt80ebiFckrZMXmJp5Kox3Q6yWhnKNXng5EhcGKtFJkyY7UBeCplZebl0aff28ZufNqSvIIUoh",
+    "about": "",
+    "ip": "192.168.1.181",
+    "ua": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/137.0.0.0 Safari\/537.36",
+    "numPost": 2,
+    "causeBan": "",
+    "timeBan": 0,
+    "timeActive": 1749653186,
+    "timeRegistration": 1749653186,
+    "data": [],
+    "preferences": 1,
+    "authorized": false
+}
