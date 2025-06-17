@@ -1,0 +1,32 @@
+#fz152cookie{
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    bottom: 20px;
+    left: 30px;
+    right: 30px;
+    box-sizing: border-box;
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    font-size: 14px;
+    padding: 30px 50px;
+    /* max-width: 90%; */
+}
+#fz152cookie div:first-child{
+    padding-right: 50px;
+}
+#fz152cookie button{
+    white-space: nowrap;
+}
+/* Для телефонов */
+@media screen and (max-width: 1040px) {
+    #fz152cookie{
+        display: block;
+        padding: 25px 30px;
+    }
+    #fz152cookie div:first-child{
+        padding-right: 0px;
+        padding-bottom: 20px;
+    }
+}

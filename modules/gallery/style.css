@@ -1,0 +1,27 @@
+.mygallery, .gallery_list_folder, .gallery_list_img {overflow: hidden;}
+.gallery_navigat{
+margin-bottom: 10px;
+}
+.folder, .fancybox{
+float: left;
+width: 180px;
+background-color: #fff; 
+border: 1px solid #aaa;
+box-sizing: border-box;
+font-weight: bold;
+text-align: center;
+margin: 0px 5px 5px 0px; padding: 5px;
+}
+.fancybox{
+line-height: 0;
+}
+.folder img, .fancybox img{width: 100%; height: 110px; border: 0; margin: 0px; padding: 0px;}
+.fancybox img{object-fit: cover;line-height: 0;}
+.error{background-color: red; font: bold 14px Arial, sans-serif; color: white; padding: 10px;}
+@media screen and (max-width: 768px) {
+    .folder, .fancybox{
+        width: 100%;
+        margin: 0px 0px 10px 0px; padding: 10px;
+    }
+    .folder img, .fancybox img{width: 100%; height: auto; }
+}

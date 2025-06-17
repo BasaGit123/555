@@ -1,0 +1,250 @@
+/* Grundlayout */
+#container-newssorter {
+    padding: 18px;
+}
+
+/* Einstellungen-Bereich */
+fieldset {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    background-color: #fff;
+}
+
+legend {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+label {
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+/* Standard Styling für die Statusnachricht */
+#status-message {
+    display: none; /* Anfangs ist die Nachricht versteckt */
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: #d4edda; /* Grün für Erfolg */
+    border: 1px solid #c3e6cb;
+    color: #155724;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+}
+
+/* Optionale Klasse für eine 'Erfolg'-Nachricht */
+.success-msg {
+    background-color: #d4edda; /* Grün */
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+/* Optionale Klasse für eine 'Fehler'-Nachricht (falls benötigt) */
+.error-msg {
+    background-color: #f8d7da; /* Rot für Fehler */
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+.link-powered {
+    display: block;
+    margin: 30px auto; /* Zentrale Ausrichtung mit gleichmäßigen Abständen */
+    padding: 15px 20px; /* Polsterung für mehr Klickfläche */
+    background-color: #f0f0f0; /* Helle Hintergrundfarbe für bessere Sichtbarkeit */
+    border: 1px solid #ccc; /* Dezenter Rahmen für Abgrenzung */
+    border-radius: 5px; /* Abgerundete Ecken */
+    text-align: center; /* Text zentrieren */
+    font-size: 1.2em; /* Größere Schriftgröße für bessere Lesbarkeit */
+    color: #333; /* Dunkle Schriftfarbe für besseren Kontrast */
+    text-decoration: none; /* Entfernt die Unterstreichung */
+    transition: background-color 0.3s, transform 0.3s; /* Sanfte Übergänge */
+}
+
+.link-powered:hover {
+    background-color: #e0e0e0; /* Hellerer Hintergrund beim Hover */
+    transform: scale(1.02); /* Leichtes Vergrößern beim Hover */
+}
+
+
+select {
+    font-size: 16px;
+    padding: 5px 10px;
+    margin: 5px 0;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+button.save-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button.save-btn:hover {
+    background-color: #218838;
+}
+
+/* Filter */
+#filter-form {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#filter-form input[type="text"] {
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+#filter-form select {
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+/* News-Liste */
+#news-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+}
+
+.news-item {
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    background: #f8f9fa;
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.news-item img.preview {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    cursor: zoom-in;
+}
+
+.news-meta {
+    font-size: 14px;
+    color: #555;
+}
+
+.news-item:hover {
+    background: #e9ecef;
+    transform: translateX(10px);
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+
+.news-item .drag-handle {
+    cursor: move;
+    color: #999;
+    margin-bottom: 6px;
+}
+
+.tag {
+    display: inline-block;
+    background: #e1ecf4;
+    color: #39739d;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    margin-right: 4px;
+}
+
+/* Mobile-first Anpassungen */
+@media (max-width: 768px) {
+    #main {
+        padding: 10px;
+    }
+
+    #news-list {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+
+    .news-item img.preview {
+        height: 120px;
+    }
+
+    .news-meta {
+        font-size: 13px;
+    }
+
+    button.save-btn {
+        padding: 8px 16px;
+    }
+
+    .menu_page a.link {
+        font-size: 14px;
+        margin-right: 10px;
+    }
+
+    #filter-form {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    #sort-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #sort-buttons a {
+        font-size: 14px;
+        padding: 6px 12px;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Kleine Mobilgeräte Anpassung */
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 20px;
+    }
+
+    #filter-form input[type="text"], #filter-form select {
+        width: 100%;
+    }
+
+    .news-item {
+        padding: 10px;
+    }
+
+    .news-item img.preview {
+        height: 100px;
+    }
+
+    #news-list {
+        grid-template-columns: 1fr;
+    }
+
+    button.save-btn {
+        padding: 6px 12px;
+    }
+
+    .news-meta {
+        font-size: 12px;
+    }
+
+    #sort-buttons a {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+}

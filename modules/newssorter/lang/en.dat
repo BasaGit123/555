@@ -1,0 +1,20 @@
+{
+  "title": "News Sorting by Drag & Drop",
+  "subtitle": "The first news in the top left corner, the last at the bottom right. Real-time sorting.",
+  "sort_alpha": "Alphabetically (Title)",
+  "sort_date": "By Date",
+  "sort_header": "By Title",
+  "sort_category": "By Category",
+  "filter_label": "Filter by Category:",
+  "filter_all": "-- All Categories --",
+  "current_display": "Current Selection",
+  "category": "Categories",
+  "date": "Date",
+  "settings": "Settings",
+  "save": "Save",
+  "language": "Language",
+  "settings_saved": "Settings saved",
+  "default_sort": "Default Sort",
+  "powered_by": "Powered by ",
+  "sort_default": "Default"
+}

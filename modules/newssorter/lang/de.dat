@@ -1,0 +1,20 @@
+{
+  "title": "News Sortierung per Drag & Drop",
+  "subtitle": "Die erste Nachricht oben links, die letzte unten rechts. Echtzeit-Sortierung.",
+  "sort_alpha": "Alphabetisch (Titel)",
+  "sort_date": "Nach Datum",
+  "sort_header": "Nach Titel",
+  "sort_category": "Nach Kategorie",
+  "filter_label": "Filter nach Kategorie:",
+  "filter_all": "-- Alle Kategorien --",
+  "current_display": "Aktuelle Auswahl",
+  "category": "Kategorien",
+  "date": "Datum",
+  "settings": "Einstellungen",
+  "save": "Speichern",
+  "language": "Sprache",
+  "settings_saved": "Einstellungen gespeichert",
+  "default_sort": "Standard-Sortierung",
+  "powered_by": "Powered by ",
+  "sort_default": "Standard"
+}
